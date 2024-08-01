@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model todo {
+  id          Int      @id @default(autoincrement())
+  idcategory  Int
+  description String   @db.VarChar(255)
+  done        Boolean?
+  deleted     Boolean? @default(false)
+  category    category @relation(fields: [idcategory], references: [idcategory], onDelete: NoAction, onUpdate: NoAction, map: "fk_category")
+}
+
+model category {
+  idcategory Int       @id @default(autoincrement())
+  name       String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  todo       todo[]
+}
